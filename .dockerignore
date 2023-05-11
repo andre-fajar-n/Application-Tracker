@@ -21,8 +21,7 @@
 # Go workspace file
 **/go.work
 
-**/.env
 **/.config
-**/application-tracker-server
+/application-tracker-server
 **/*.log
 fly.toml

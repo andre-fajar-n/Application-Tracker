@@ -1,31 +1,33 @@
 .PHONY: generate build run doc validate spec clean help
 
-all: clean generate build
+all: clean spec generate build
 
 validate:
-	swagger validate ./api/application-tracker/swagger.yml
+	swagger validate ./api/application-tracker/index.yml
 
 spec:
-	swagger generate spec -o ./api/application-tracker/swagger-gen.yml --with-flatten=full
+	swagger expand --output=./api/application-tracker/result.yml --format=yaml ./api/application-tracker/index.yml
 
 build: 
 	CGO_ENABLED=0 GOOS=linux go build -v -installsuffix cgo ./cmd/application-tracker-server
 	
 run:
-	./application-tracker-server --port=7070 --host=0.0.0.0 --config=./configs/app.yaml
+	./application-tracker-server --port=8080 --host=0.0.0.0 --config=./configs/app.yaml
 
 run-local:
-	go run cmd/application-tracker-server/main.go --port=7070
+	go run cmd/application-tracker-server/main.go --port=8080
 
 doc: validate
-	swagger serve api/application-tracker/swagger.yml --with-flatten=full --no-open --host=0.0.0.0 --port=7070 --base-path=/
+	swagger serve api/application-tracker/index.yml --no-open --host=0.0.0.0 --port=8080 --base-path=/
 
 clean:
 	rm -rf application-tracker-server
+	rm -rf ./gen/models
+	rm -rf ./gen/rest
 	go clean -i .
 
 generate: validate
-	go generate ./...
+	swagger generate server --exclude-main -A application-tracker-server -t gen -f ./api/application-tracker/result.yml --principal models.Principal
 
 help:
 	@echo "make: compile packages and dependencies"

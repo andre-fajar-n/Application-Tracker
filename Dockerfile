@@ -7,6 +7,7 @@ RUN wget "https://github.com/go-swagger/go-swagger/releases/download/v0.30.3/swa
     chmod a+x /usr/local/bin/swagger
 
 COPY go.mod go.sum ./
+
 RUN go mod download && go mod verify
 
 COPY ./ /app
@@ -15,11 +16,15 @@ RUN wget "https://github.com/go-swagger/go-swagger/releases/download/v0.30.3/swa
     mv swagger_linux_amd64 /usr/local/bin/swagger && \
     chmod a+x /usr/local/bin/swagger
 
+RUN git config --global --add safe.directory /app
+
 RUN make all
 
 FROM alpine:3.17.0
 
 RUN apk update && apk add tzdata
+
+COPY ./.env /app/.env
 
 WORKDIR /app
 

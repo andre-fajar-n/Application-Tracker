@@ -43,13 +43,9 @@ definitions:
     properties:
       page:
         type: integer
-        example: 1
       per_page:
         type: integer
-        example: 50
       total_row:
         type: integer
-        example: 200
       total_page:
         type: integer
-        example: 4

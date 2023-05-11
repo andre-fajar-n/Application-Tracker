@@ -47,13 +47,27 @@ func init() {
           "200": {
             "description": "Health Check",
             "schema": {
-              "$ref": "#/definitions/Success"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "default": {
             "description": "Server Error",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "integer"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "error"
+                }
+              }
             }
           }
         }
@@ -61,26 +75,6 @@ func init() {
     }
   },
   "definitions": {
-    "Error": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer"
-        },
-        "message": {
-          "type": "string",
-          "example": "error"
-        }
-      }
-    },
-    "Success": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string"
-        }
-      }
-    },
     "principal": {
       "type": "object",
       "properties": {
@@ -135,13 +129,27 @@ func init() {
           "200": {
             "description": "Health Check",
             "schema": {
-              "$ref": "#/definitions/Success"
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "default": {
             "description": "Server Error",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "integer"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "error"
+                }
+              }
             }
           }
         }
@@ -149,26 +157,6 @@ func init() {
     }
   },
   "definitions": {
-    "Error": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer"
-        },
-        "message": {
-          "type": "string",
-          "example": "error"
-        }
-      }
-    },
-    "Success": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string"
-        }
-      }
-    },
     "principal": {
       "type": "object",
       "properties": {

@@ -16,10 +16,10 @@ import (
 	"gorm.io/gorm/schema"
 )
 
-func NewRuntime(cfg *viper.Viper) *Runtime {
+func NewRuntime() *Runtime {
 	rt := new(Runtime)
 
-	rt = rt.config(cfg)
+	rt = rt.config()
 
 	rt = rt.db()
 
@@ -74,7 +74,14 @@ func (r *Runtime) db() *Runtime {
 	return r
 }
 
-func (r *Runtime) config(cfg *viper.Viper) *Runtime {
+func (r *Runtime) config() *Runtime {
+	cfg := viper.New()
+	cfg.SetConfigFile(".env")
+	err := cfg.ReadInConfig()
+	if err != nil {
+		log.Fatalf("Failed load config : %f", err)
+	}
+	
 	r.Cfg = cfg
 
 	return r
