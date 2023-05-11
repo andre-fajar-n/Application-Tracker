@@ -14,7 +14,7 @@ import (
 
 // Success success
 //
-// swagger:model success
+// swagger:model Success
 type Success struct {
 
 	// message

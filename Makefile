@@ -6,7 +6,7 @@ validate:
 	swagger validate ./api/application-tracker/swagger.yml
 
 spec:
-	swagger generate spec -o ./api/application-tracker/swagger-gen.yml
+	swagger generate spec -o ./api/application-tracker/swagger-gen.yml --with-flatten=full
 
 build: 
 	CGO_ENABLED=0 GOOS=linux go build -v -installsuffix cgo ./cmd/application-tracker-server
@@ -18,7 +18,7 @@ run-local:
 	go run cmd/application-tracker-server/main.go --port=7070
 
 doc: validate
-	swagger serve api/application-tracker/swagger.yml --no-open --host=0.0.0.0 --port=7070 --base-path=/
+	swagger serve api/application-tracker/swagger.yml --with-flatten=full --no-open --host=0.0.0.0 --port=7070 --base-path=/
 
 clean:
 	rm -rf application-tracker-server

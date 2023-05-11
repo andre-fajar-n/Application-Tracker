@@ -35,10 +35,52 @@ func init() {
   },
   "paths": {
     "/health": {
-      "$ref": "./path/v1/health/health.yml"
+      "get": {
+        "security": [],
+        "description": "Check if the App is Running",
+        "tags": [
+          "health"
+        ],
+        "summary": "Health Check",
+        "operationId": "health",
+        "responses": {
+          "200": {
+            "description": "Health Check",
+            "schema": {
+              "$ref": "#/definitions/Success"
+            }
+          },
+          "default": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
+    "Error": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string",
+          "example": "error"
+        }
+      }
+    },
+    "Success": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
     "principal": {
       "type": "object",
       "properties": {
@@ -93,13 +135,13 @@ func init() {
           "200": {
             "description": "Health Check",
             "schema": {
-              "$ref": "#/definitions/success"
+              "$ref": "#/definitions/Success"
             }
           },
           "default": {
             "description": "Server Error",
             "schema": {
-              "$ref": "#/definitions/error"
+              "$ref": "#/definitions/Error"
             }
           }
         }
@@ -107,7 +149,7 @@ func init() {
     }
   },
   "definitions": {
-    "error": {
+    "Error": {
       "type": "object",
       "properties": {
         "code": {
@@ -116,6 +158,14 @@ func init() {
         "message": {
           "type": "string",
           "example": "error"
+        }
+      }
+    },
+    "Success": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
         }
       }
     },
@@ -131,14 +181,6 @@ func init() {
         "user_id": {
           "type": "number",
           "format": "uint64"
-        }
-      }
-    },
-    "success": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string"
         }
       }
     }

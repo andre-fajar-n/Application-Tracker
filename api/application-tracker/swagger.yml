@@ -14,7 +14,22 @@ securityDefinitions:
 paths:
   # health
   /health:
-    $ref: "./path/v1/health/health.yml"
+    # $ref: "./path/v1/health/health.yml"
+    get:
+      tags: [health]
+      summary: 'Health Check'
+      description: 'Check if the App is Running'
+      operationId: health
+      security: []
+      responses:
+        200:
+          description: 'Health Check'
+          schema:
+            $ref: '#/definitions/Success'
+        default:
+          schema:
+            $ref: '#/definitions/Error'
+          description: Server Error
 
 definitions:
   principal:
@@ -26,4 +41,19 @@ definitions:
         type: number
         format: uint64
       expired_at:
+        type: string
+
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+        example: 'error'
+
+  Success:
+    type: object
+    properties:
+      message:
         type: string
