@@ -6,6 +6,7 @@ import (
 	"applicationtracker/gen/restapi/operations"
 	"applicationtracker/internal/handlers"
 	"applicationtracker/internal/rest"
+	"fmt"
 	"log"
 	"os"
 
@@ -69,7 +70,11 @@ func main() {
 	rest.Route(rt, api, h)
 
 	api.Logger = func(s string, i ...interface{}) {
-		rt.Logger.Info().Str("Messasge", s).Fields(i).Msg("Logger")
+		msg := "Logger: " + s
+		if i != nil {
+			msg = fmt.Sprintf(msg, i)
+		}
+		rt.Logger.Info().Msg(msg)
 	}
 
 	handler := alice.New(

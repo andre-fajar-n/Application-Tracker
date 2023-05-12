@@ -11,7 +11,7 @@ import (
 )
 
 func parseToken(rt *applicationtracker.Runtime, token string) (*jwt.Payload, error) {
-	secret := rt.Cfg.GetString("JWT_SECRET")
+	secret := rt.Cfg.JwtSecret
 	maker, err := jwt.NewJWTMaker(secret)
 	if err != nil {
 		return nil, err

@@ -19,11 +19,11 @@ import (
 func NewRuntime() *Runtime {
 	rt := new(Runtime)
 
+	rt = rt.logger()
+
 	rt = rt.config()
 
 	rt = rt.db()
-
-	rt = rt.logger()
 
 	rt.runMigration()
 
@@ -32,17 +32,18 @@ func NewRuntime() *Runtime {
 
 type Runtime struct {
 	Db     *gorm.DB
-	Cfg    *viper.Viper
+	Cfg    config
 	Logger zerolog.Logger
 }
 
 func (r *Runtime) db() *Runtime {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Jakarta",
-		r.Cfg.GetString("DB_HOST"),
-		r.Cfg.GetString("DB_USER"),
-		r.Cfg.GetString("DB_PASSWORD"),
-		r.Cfg.GetString("DB_NAME"),
-		r.Cfg.GetString("DB_PORT"),
+	r.Logger.Info().Msg("Initiate connection to DB...")
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable TimeZone=Asia/Jakarta",
+		r.Cfg.DBHost,
+		r.Cfg.DBUser,
+		r.Cfg.DBPassword,
+		r.Cfg.DBName,
+		r.Cfg.DBPort,
 	)
 
 	dbLogger := logger.New(
@@ -66,23 +67,44 @@ func (r *Runtime) db() *Runtime {
 
 	db, err := gorm.Open(postgres.Open(dsn), gormConfig)
 	if err != nil {
-		log.Panicf("Error connect to DB : %f", err)
+		r.Logger.Error().Err(err).Msg("Error connect to DB")
+		log.Panicf("Error connect to DB : %v", err)
 	}
 
 	r.Db = db
+
+	r.Logger.Info().Msg("DB successfully connected")
 
 	return r
 }
 
 func (r *Runtime) config() *Runtime {
-	cfg := viper.New()
-	cfg.SetConfigFile(".env")
-	err := cfg.ReadInConfig()
-	if err != nil {
-		log.Fatalf("Failed load config : %f", err)
+	r.Logger.Info().Msg("Initiate read env...")
+
+	viper.SetConfigName("")
+	viper.SetConfigFile(".env")
+	viper.SetConfigType("env")
+	viper.AddConfigPath(".")
+
+	viper.AutomaticEnv()
+
+	if err := viper.ReadInConfig(); err != nil {
+		err = viper.SafeWriteConfig()
+		if err != nil {
+			r.Logger.Error().Err(err).Msg("Failed load config")
+			log.Fatalf("Failed load config : %v", err)
+		}
 	}
-	
+
+	var cfg config
+	if err := viper.Unmarshal(&cfg); err != nil {
+		r.Logger.Error().Err(err).Msg("Failed unmarshal config")
+		log.Fatalf("Failed unmarshal config : %v", err)
+	}
+
 	r.Cfg = cfg
+
+	r.Logger.Info().Msg("Success reading env")
 
 	return r
 }
@@ -101,7 +123,11 @@ func (r *Runtime) logger() *Runtime {
 }
 
 func (r *Runtime) runMigration() {
+	r.Logger.Info().Msg("Initiate db migration")
+
 	r.Db.AutoMigrate()
+
+	r.Logger.Info().Msg("Migrating db has been done")
 }
 
 func (r *Runtime) SetError(code int, msg string, args ...interface{}) error {

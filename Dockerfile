@@ -24,8 +24,6 @@ FROM alpine:3.17.0
 
 RUN apk update && apk add tzdata
 
-COPY ./.env /app/.env
-
 WORKDIR /app
 
 COPY --from=builder /app/application-tracker-server /app/application-tracker-server
