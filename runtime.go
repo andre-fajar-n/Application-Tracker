@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/go-openapi/errors"
@@ -81,18 +82,36 @@ func (r *Runtime) db() *Runtime {
 func (r *Runtime) config() *Runtime {
 	r.Logger.Info().Msg("Initiate read env...")
 
-	viper.SetConfigName("")
-	viper.SetConfigFile(".env")
+	viper.SetConfigName("config")
 	viper.SetConfigType("env")
 	viper.AddConfigPath(".")
+
+	for _, v := range os.Environ() {
+		temp := strings.Split(v, "=")
+		viper.BindEnv(temp[0])
+	}
 
 	viper.AutomaticEnv()
 
 	if err := viper.ReadInConfig(); err != nil {
-		err = viper.SafeWriteConfig()
-		if err != nil {
+		switch err.(type) {
+
+		default:
 			r.Logger.Error().Err(err).Msg("Failed load config")
 			log.Fatalf("Failed load config : %v", err)
+
+		case viper.ConfigFileNotFoundError:
+			err = viper.SafeWriteConfig()
+			if err != nil {
+				switch err.(type) {
+
+				case viper.ConfigFileAlreadyExistsError:
+
+				default:
+					r.Logger.Error().Err(err).Msg("Failed SafeWriteConfig config")
+					log.Fatalf("Failed SafeWriteConfig config : %v", err)
+				}
+			}
 		}
 	}
 
