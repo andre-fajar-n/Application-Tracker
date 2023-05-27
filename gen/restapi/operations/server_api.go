@@ -19,12 +19,15 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
+	"applicationtracker/gen/models"
+	"applicationtracker/gen/restapi/operations/authentication"
 	"applicationtracker/gen/restapi/operations/health"
+	"applicationtracker/gen/restapi/operations/user"
 )
 
-// NewApplicationTrackerServerAPI creates a new ApplicationTrackerServer instance
-func NewApplicationTrackerServerAPI(spec *loads.Document) *ApplicationTrackerServerAPI {
-	return &ApplicationTrackerServerAPI{
+// NewServerAPI creates a new Server instance
+func NewServerAPI(spec *loads.Document) *ServerAPI {
+	return &ServerAPI{
 		handlers:            make(map[string]map[string]http.Handler),
 		formats:             strfmt.Default,
 		defaultConsumes:     "application/json",
@@ -45,14 +48,30 @@ func NewApplicationTrackerServerAPI(spec *loads.Document) *ApplicationTrackerSer
 
 		JSONProducer: runtime.JSONProducer(),
 
+		UserFindMyUserDataHandler: user.FindMyUserDataHandlerFunc(func(params user.FindMyUserDataParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation user.FindMyUserData has not yet been implemented")
+		}),
 		HealthHealthHandler: health.HealthHandlerFunc(func(params health.HealthParams) middleware.Responder {
 			return middleware.NotImplemented("operation health.Health has not yet been implemented")
 		}),
+		AuthenticationLoginHandler: authentication.LoginHandlerFunc(func(params authentication.LoginParams) middleware.Responder {
+			return middleware.NotImplemented("operation authentication.Login has not yet been implemented")
+		}),
+		AuthenticationRegisterHandler: authentication.RegisterHandlerFunc(func(params authentication.RegisterParams) middleware.Responder {
+			return middleware.NotImplemented("operation authentication.Register has not yet been implemented")
+		}),
+
+		// Applies when the "Authorization" header is set
+		AuthorizationAuth: func(token string) (*models.Principal, error) {
+			return nil, errors.NotImplemented("api key auth (authorization) Authorization from header param [Authorization] has not yet been implemented")
+		},
+		// default authorizer is authorized meaning no requests are blocked
+		APIAuthorizer: security.Authorized(),
 	}
 }
 
-/*ApplicationTrackerServerAPI the application tracker server API */
-type ApplicationTrackerServerAPI struct {
+/*ServerAPI the server API */
+type ServerAPI struct {
 	spec            *loads.Document
 	context         *middleware.Context
 	handlers        map[string]map[string]http.Handler
@@ -87,8 +106,21 @@ type ApplicationTrackerServerAPI struct {
 	//   - application/json
 	JSONProducer runtime.Producer
 
+	// AuthorizationAuth registers a function that takes a token and returns a principal
+	// it performs authentication based on an api key Authorization provided in the header
+	AuthorizationAuth func(string) (*models.Principal, error)
+
+	// APIAuthorizer provides access control (ACL/RBAC/ABAC) by providing access to the request and authenticated principal
+	APIAuthorizer runtime.Authorizer
+
+	// UserFindMyUserDataHandler sets the operation handler for the find my user data operation
+	UserFindMyUserDataHandler user.FindMyUserDataHandler
 	// HealthHealthHandler sets the operation handler for the health operation
 	HealthHealthHandler health.HealthHandler
+	// AuthenticationLoginHandler sets the operation handler for the login operation
+	AuthenticationLoginHandler authentication.LoginHandler
+	// AuthenticationRegisterHandler sets the operation handler for the register operation
+	AuthenticationRegisterHandler authentication.RegisterHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -110,52 +142,52 @@ type ApplicationTrackerServerAPI struct {
 }
 
 // UseRedoc for documentation at /docs
-func (o *ApplicationTrackerServerAPI) UseRedoc() {
+func (o *ServerAPI) UseRedoc() {
 	o.useSwaggerUI = false
 }
 
 // UseSwaggerUI for documentation at /docs
-func (o *ApplicationTrackerServerAPI) UseSwaggerUI() {
+func (o *ServerAPI) UseSwaggerUI() {
 	o.useSwaggerUI = true
 }
 
 // SetDefaultProduces sets the default produces media type
-func (o *ApplicationTrackerServerAPI) SetDefaultProduces(mediaType string) {
+func (o *ServerAPI) SetDefaultProduces(mediaType string) {
 	o.defaultProduces = mediaType
 }
 
 // SetDefaultConsumes returns the default consumes media type
-func (o *ApplicationTrackerServerAPI) SetDefaultConsumes(mediaType string) {
+func (o *ServerAPI) SetDefaultConsumes(mediaType string) {
 	o.defaultConsumes = mediaType
 }
 
 // SetSpec sets a spec that will be served for the clients.
-func (o *ApplicationTrackerServerAPI) SetSpec(spec *loads.Document) {
+func (o *ServerAPI) SetSpec(spec *loads.Document) {
 	o.spec = spec
 }
 
 // DefaultProduces returns the default produces media type
-func (o *ApplicationTrackerServerAPI) DefaultProduces() string {
+func (o *ServerAPI) DefaultProduces() string {
 	return o.defaultProduces
 }
 
 // DefaultConsumes returns the default consumes media type
-func (o *ApplicationTrackerServerAPI) DefaultConsumes() string {
+func (o *ServerAPI) DefaultConsumes() string {
 	return o.defaultConsumes
 }
 
 // Formats returns the registered string formats
-func (o *ApplicationTrackerServerAPI) Formats() strfmt.Registry {
+func (o *ServerAPI) Formats() strfmt.Registry {
 	return o.formats
 }
 
 // RegisterFormat registers a custom format validator
-func (o *ApplicationTrackerServerAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
+func (o *ServerAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
 	o.formats.Add(name, format, validator)
 }
 
-// Validate validates the registrations in the ApplicationTrackerServerAPI
-func (o *ApplicationTrackerServerAPI) Validate() error {
+// Validate validates the registrations in the ServerAPI
+func (o *ServerAPI) Validate() error {
 	var unregistered []string
 
 	if o.JSONConsumer == nil {
@@ -169,8 +201,21 @@ func (o *ApplicationTrackerServerAPI) Validate() error {
 		unregistered = append(unregistered, "JSONProducer")
 	}
 
+	if o.AuthorizationAuth == nil {
+		unregistered = append(unregistered, "AuthorizationAuth")
+	}
+
+	if o.UserFindMyUserDataHandler == nil {
+		unregistered = append(unregistered, "user.FindMyUserDataHandler")
+	}
 	if o.HealthHealthHandler == nil {
 		unregistered = append(unregistered, "health.HealthHandler")
+	}
+	if o.AuthenticationLoginHandler == nil {
+		unregistered = append(unregistered, "authentication.LoginHandler")
+	}
+	if o.AuthenticationRegisterHandler == nil {
+		unregistered = append(unregistered, "authentication.RegisterHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -181,23 +226,34 @@ func (o *ApplicationTrackerServerAPI) Validate() error {
 }
 
 // ServeErrorFor gets a error handler for a given operation id
-func (o *ApplicationTrackerServerAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
+func (o *ServerAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
 	return o.ServeError
 }
 
 // AuthenticatorsFor gets the authenticators for the specified security schemes
-func (o *ApplicationTrackerServerAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
-	return nil
+func (o *ServerAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
+	result := make(map[string]runtime.Authenticator)
+	for name := range schemes {
+		switch name {
+		case "authorization":
+			scheme := schemes[name]
+			result[name] = o.APIKeyAuthenticator(scheme.Name, scheme.In, func(token string) (interface{}, error) {
+				return o.AuthorizationAuth(token)
+			})
+
+		}
+	}
+	return result
 }
 
 // Authorizer returns the registered authorizer
-func (o *ApplicationTrackerServerAPI) Authorizer() runtime.Authorizer {
-	return nil
+func (o *ServerAPI) Authorizer() runtime.Authorizer {
+	return o.APIAuthorizer
 }
 
 // ConsumersFor gets the consumers for the specified media types.
 // MIME type parameters are ignored here.
-func (o *ApplicationTrackerServerAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
+func (o *ServerAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
 	result := make(map[string]runtime.Consumer, len(mediaTypes))
 	for _, mt := range mediaTypes {
 		switch mt {
@@ -216,7 +272,7 @@ func (o *ApplicationTrackerServerAPI) ConsumersFor(mediaTypes []string) map[stri
 
 // ProducersFor gets the producers for the specified media types.
 // MIME type parameters are ignored here.
-func (o *ApplicationTrackerServerAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
+func (o *ServerAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
 	result := make(map[string]runtime.Producer, len(mediaTypes))
 	for _, mt := range mediaTypes {
 		switch mt {
@@ -232,7 +288,7 @@ func (o *ApplicationTrackerServerAPI) ProducersFor(mediaTypes []string) map[stri
 }
 
 // HandlerFor gets a http.Handler for the provided operation method and path
-func (o *ApplicationTrackerServerAPI) HandlerFor(method, path string) (http.Handler, bool) {
+func (o *ServerAPI) HandlerFor(method, path string) (http.Handler, bool) {
 	if o.handlers == nil {
 		return nil, false
 	}
@@ -247,8 +303,8 @@ func (o *ApplicationTrackerServerAPI) HandlerFor(method, path string) (http.Hand
 	return h, ok
 }
 
-// Context returns the middleware context for the application tracker server API
-func (o *ApplicationTrackerServerAPI) Context() *middleware.Context {
+// Context returns the middleware context for the server API
+func (o *ServerAPI) Context() *middleware.Context {
 	if o.context == nil {
 		o.context = middleware.NewRoutableContext(o.spec, o, nil)
 	}
@@ -256,7 +312,7 @@ func (o *ApplicationTrackerServerAPI) Context() *middleware.Context {
 	return o.context
 }
 
-func (o *ApplicationTrackerServerAPI) initHandlerCache() {
+func (o *ServerAPI) initHandlerCache() {
 	o.Context() // don't care about the result, just that the initialization happened
 	if o.handlers == nil {
 		o.handlers = make(map[string]map[string]http.Handler)
@@ -265,12 +321,24 @@ func (o *ApplicationTrackerServerAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
+	o.handlers["GET"]["/v1/profile"] = user.NewFindMyUserData(o.context, o.UserFindMyUserDataHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
 	o.handlers["GET"]["/health"] = health.NewHealth(o.context, o.HealthHealthHandler)
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/v1/login"] = authentication.NewLogin(o.context, o.AuthenticationLoginHandler)
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/v1/register"] = authentication.NewRegister(o.context, o.AuthenticationRegisterHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP
 // can be used directly in http.ListenAndServe(":8000", api.Serve(nil))
-func (o *ApplicationTrackerServerAPI) Serve(builder middleware.Builder) http.Handler {
+func (o *ServerAPI) Serve(builder middleware.Builder) http.Handler {
 	o.Init()
 
 	if o.Middleware != nil {
@@ -283,24 +351,24 @@ func (o *ApplicationTrackerServerAPI) Serve(builder middleware.Builder) http.Han
 }
 
 // Init allows you to just initialize the handler cache, you can then recompose the middleware as you see fit
-func (o *ApplicationTrackerServerAPI) Init() {
+func (o *ServerAPI) Init() {
 	if len(o.handlers) == 0 {
 		o.initHandlerCache()
 	}
 }
 
 // RegisterConsumer allows you to add (or override) a consumer for a media type.
-func (o *ApplicationTrackerServerAPI) RegisterConsumer(mediaType string, consumer runtime.Consumer) {
+func (o *ServerAPI) RegisterConsumer(mediaType string, consumer runtime.Consumer) {
 	o.customConsumers[mediaType] = consumer
 }
 
 // RegisterProducer allows you to add (or override) a producer for a media type.
-func (o *ApplicationTrackerServerAPI) RegisterProducer(mediaType string, producer runtime.Producer) {
+func (o *ServerAPI) RegisterProducer(mediaType string, producer runtime.Producer) {
 	o.customProducers[mediaType] = producer
 }
 
 // AddMiddlewareFor adds a http middleware to existing handler
-func (o *ApplicationTrackerServerAPI) AddMiddlewareFor(method, path string, builder middleware.Builder) {
+func (o *ServerAPI) AddMiddlewareFor(method, path string, builder middleware.Builder) {
 	um := strings.ToUpper(method)
 	if path == "/" {
 		path = ""

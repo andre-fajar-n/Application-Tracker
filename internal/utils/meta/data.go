@@ -1,6 +1,6 @@
 package meta
 
-var (
+const (
 	Offset = int64(0)
 	Limit  = int64(10)
 	Page   = int64(1)

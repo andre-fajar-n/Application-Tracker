@@ -1,0 +1,17 @@
+definitions:
+  userData:
+    type: object
+    properties: 
+      username:
+        type: string
+        x-omitempty: false
+      password:
+        type: string
+        x-omitempty: false
+
+  myUserData:
+    type: object
+    properties:
+      username:
+        type: string
+        x-omitempty: false

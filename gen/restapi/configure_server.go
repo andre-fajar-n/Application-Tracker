@@ -14,13 +14,13 @@ import (
 	"applicationtracker/gen/restapi/operations/health"
 )
 
-//go:generate swagger generate server --target ../../gen --name ApplicationTrackerServer --spec ../../api/application-tracker/swagger.yml --principal models.Principal --exclude-main
+//go:generate swagger generate server --target ../../gen --name Server --spec ../../api/go-template/result.yml --principal models.Principal --exclude-main
 
-func configureFlags(api *operations.ApplicationTrackerServerAPI) {
+func configureFlags(api *operations.ServerAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
 }
 
-func configureAPI(api *operations.ApplicationTrackerServerAPI) http.Handler {
+func configureAPI(api *operations.ServerAPI) http.Handler {
 	// configure the api here
 	api.ServeError = errors.ServeError
 

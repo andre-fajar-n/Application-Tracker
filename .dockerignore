@@ -22,6 +22,6 @@
 **/go.work
 
 **/.config
-/application-tracker-server
+/application-tracker
 **/*.log
 fly.toml

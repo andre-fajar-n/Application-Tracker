@@ -1,11 +1,12 @@
-package main
+package server
 
 import (
-	"applicationtracker"
 	"applicationtracker/gen/restapi"
 	"applicationtracker/gen/restapi/operations"
 	"applicationtracker/internal/handlers"
+	"applicationtracker/internal/repositories"
 	"applicationtracker/internal/rest"
+	"applicationtracker/runtime"
 	"fmt"
 	"log"
 	"os"
@@ -21,7 +22,7 @@ var mainFlags = struct {
 	AppConfig string `long:"config" description:"Main application configuration YAML path"`
 }{}
 
-func main() {
+func Main() {
 	log.SetFlags(log.LstdFlags | log.Llongfile)
 
 	swaggerSpec, err := loads.Analyzed(restapi.SwaggerJSON, "")
@@ -29,7 +30,7 @@ func main() {
 		log.Fatalf("Error : %f", err)
 	}
 
-	api := operations.NewApplicationTrackerServerAPI(swaggerSpec)
+	api := operations.NewServerAPI(swaggerSpec)
 	api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{
 		{
 			ShortDescription: "App Flags",
@@ -42,8 +43,8 @@ func main() {
 	defer server.Shutdown()
 
 	parser := flags.NewParser(server, flags.Default)
-	parser.ShortDescription = "healthcare store"
-	parser.LongDescription = "healthcare store"
+	parser.ShortDescription = "go template"
+	parser.LongDescription = "go template"
 	server.ConfigureFlags()
 	for _, optsGroup := range api.CommandLineOptionsGroups {
 		_, err := parser.AddGroup(optsGroup.ShortDescription, optsGroup.LongDescription, optsGroup.Options)
@@ -62,9 +63,11 @@ func main() {
 		os.Exit(code)
 	}
 
-	rt := applicationtracker.NewRuntime()
+	rt := runtime.NewRuntime()
 
-	h := handlers.NewHandler()
+	userRepo := repositories.Newuser(*rt)
+
+	h := handlers.NewHandler(*rt, userRepo)
 
 	rest.Authorization(rt, api)
 	rest.Route(rt, api, h)
@@ -78,7 +81,7 @@ func main() {
 	}
 
 	handler := alice.New(
-		middlewares.NewRecoveryMW("application-tracker", nil),
+		middlewares.NewRecoveryMW("golang-template", nil),
 		middlewares.NewProfiler,
 	).Then(api.Serve(nil))
 
