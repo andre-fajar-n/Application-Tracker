@@ -8,6 +8,7 @@ from .models import Application
 from .models import ApplicationHistory
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from . import forms
 
 # Create your views here.
 
@@ -27,8 +28,8 @@ class ApplicationHistoryView(viewsets.ModelViewSet):
     queryset = ApplicationHistory.objects.all()
 
 
-def Index(request):
-    return render(request, 'index.html')
+def Home(request):
+    return render(request, 'home.html')
 
 
 def LoginPage(request):
@@ -36,7 +37,7 @@ def LoginPage(request):
         data = {
             'test': 'ini testing',
         }
-        return redirect('application_tracker:index', data)
+        return redirect('application_tracker:home')
 
     if request.method == "POST":
         username = request.POST.get('username')
@@ -45,9 +46,30 @@ def LoginPage(request):
 
         if user is not None:
             login(request, user)
-            return redirect('application_tracker:index')
+            return redirect('application_tracker:home')
 
         messages.info(request, 'username or password is incorrect')
 
     context = {}
     return render(request, 'authentication/login.html', context)
+
+
+def RegisterPage(request):
+    print("CEK DISINI 1", request.method)
+    if request.method == "POST":
+        form = forms.NewUserForm(request.POST)
+        print("CEK DISINI 2", form.is_valid())
+        if form.is_valid():
+            print("CEK DISINI 3")
+            user = form.save()
+            login(request, user)
+            messages.success(request, "Registration successful.")
+            return redirect("application_tracker:home")
+
+        print("CEK DISINI 4")
+        messages.error(
+            request, "Unsuccessful registration. Invalid information.")
+
+    print("CEK DISINI 5")
+    form = forms.NewUserForm()
+    return render(request, "authentication/register.html", context={"register_form": form})

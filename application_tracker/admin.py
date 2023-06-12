@@ -1,11 +1,6 @@
 from django.contrib import admin
-from .models import User
 from .models import Application
 from .models import ApplicationHistory
-
-
-class UserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'created_at')
 
 
 class ApplicationAdmin(admin.ModelAdmin):
@@ -17,6 +12,5 @@ class ApplicationHistoryAdmin(admin.ModelAdmin):
 
 
 # Register your models here.
-admin.site.register(User, UserAdmin)
 admin.site.register(Application, ApplicationAdmin)
 admin.site.register(ApplicationHistory, ApplicationHistoryAdmin)
