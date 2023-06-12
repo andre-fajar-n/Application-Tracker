@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}
+<title>YouTube</title>
+{% endblock %}
+
+{% block content %}
+    <section class="body-index">
+        <div class="row">
+            <div class="col-1" style="z-index: 99;">
+                <div class="icon-bar mt-5 pt-3">
+                    <a class="active" href="{% url 'application_tracker:index' %}"><i class="fa fa-home"></i></a> 
+                    <a href="#"><i class="fa fa-search"></i></a>
+                    <a href="#"><i class="fa fa-envelope"></i></a> 
+                    <a href="#"><i class="fa fa-globe"></i></a>
+                    <a href="#"><i class="fa fa-trash"></i></a>
+                </div>
+            </div>
+            <div class="col-11 mt-3">
+                <div class="body-index">
+                    <h4>Recommended</h4>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-1"></div>
+            <div class="col-11">
+                <div class="list-videos-index">
+                    <div class="row">
+                        
+                    </div>
+                    <div class="pagination">
+                        <span class="step-links">
+                            <span class="current">
+                                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                            </span>
+                    
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
