@@ -30,25 +30,39 @@
 						<i class="zmdi zmdi-font"></i>
 					</span>
 
-					<!-- {{ form.username.label }} -->
-					<!-- {{ form.username }} -->
-					{{ form.as_p }}
-					<!-- <div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
+					<div class="wrap-input100 validate-input">
+						{{ form }}
+						<input class="input100" type="text" name="username">
+						<span class="focus-input100" data-placeholder="Username"></span>
+					</div>
+					<span>{{ registration_form.errors.username }}</span>
+					
+					<div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
+						{{ form }}
 						<input class="input100" type="text" name="email">
-						<span class="focus-input100" data-placeholder="Email">
-						</span>
-					</div> -->
+						<span class="focus-input100" data-placeholder="Email"></span>
+					</div>
+					<span>{{ registration_form.errors.email }}</span>
 
-					<!-- {{ form.password1.label }}
-					{{ form.password1 }} -->
-					<!-- <div class="wrap-input100 validate-input" data-validate="Enter password">
+					<div class="wrap-input100 validate-input" data-validate="Enter password">
 						<span class="btn-show-pass">
 							<i class="zmdi zmdi-eye"></i>
 						</span>
-						<input class="input100" type="password" name="pass">
-						<span class="focus-input100" data-placeholder="Password">
+						{{ form }}
+						<input class="input100" type="password" name="password1">
+						<span class="focus-input100" data-placeholder="Password"></span>
+					</div>
+					<span>{{ registration_form.errors.password1 }}</span>
+
+					<div class="wrap-input100 validate-input" data-validate="Enter password">
+						<span class="btn-show-pass">
+							<i class="zmdi zmdi-eye"></i>
 						</span>
-					</div> -->
+						{{ form }}
+						<input class="input100" type="password" name="password2">
+						<span class="focus-input100" data-placeholder="Confirmation Password"></span>
+					</div>
+					<span>{{ registration_form.errors.password2 }}</span>
 
 					<div class="container-login100-form-btn">
 						<div class="wrap-login100-form-btn">

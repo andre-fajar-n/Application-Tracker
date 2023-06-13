@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, redirect
 from rest_framework import viewsets
 from .serializers import UserSerializer
 from .serializers import ApplicationSerializer
@@ -8,6 +8,7 @@ from .models import Application
 from .models import ApplicationHistory
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.http import HttpResponseRedirect
 from . import forms
 
 # Create your views here.
@@ -33,43 +34,45 @@ def Home(request):
 
 
 def LoginPage(request):
+    context = {}
     if request.user.is_authenticated:
-        data = {
-            'test': 'ini testing',
-        }
         return redirect('application_tracker:home')
 
     if request.method == "POST":
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(username=username, password=password)
 
         if user is not None:
             login(request, user)
             return redirect('application_tracker:home')
+        else:
+            context['error'] = "Username or password invalid"
 
-        messages.info(request, 'username or password is incorrect')
-
-    context = {}
     return render(request, 'authentication/login.html', context)
 
 
 def RegisterPage(request):
-    print("CEK DISINI 1", request.method)
+    context = {}
     if request.method == "POST":
         form = forms.NewUserForm(request.POST)
-        print("CEK DISINI 2", form.is_valid())
         if form.is_valid():
-            print("CEK DISINI 3")
             user = form.save()
             login(request, user)
             messages.success(request, "Registration successful.")
             return redirect("application_tracker:home")
+        else:
+            # messages.error(request, "error form")
+            context['registration_form'] = form
+    # else:
+    # form = forms.NewUserForm()
+    # context['registration_form'] = form
 
-        print("CEK DISINI 4")
-        messages.error(
-            request, "Unsuccessful registration. Invalid information.")
+    return render(request, "authentication/register.html", context)
+    # return redirect("application_tracker:register", context)
+    # return HttpResponseRedirect(redirect_to="/register", )
 
-    print("CEK DISINI 5")
-    form = forms.NewUserForm()
-    return render(request, "authentication/register.html", context={"register_form": form})
+
+def Logout(request):
+    logout(request)
+    return redirect("application_tracker:login")

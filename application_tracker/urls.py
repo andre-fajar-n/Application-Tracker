@@ -7,8 +7,9 @@ from . import views
 app_name = 'application_tracker'
 urlpatterns = [
     path('login', views.LoginPage, name="login"),
-    path('home', views.Home, name='home'),
     path('register', views.RegisterPage, name="register"),
+    path('logout', views.Logout, name="logout"),
+    path('home', views.Home, name='home'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,

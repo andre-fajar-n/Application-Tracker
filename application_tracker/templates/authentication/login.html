@@ -23,7 +23,6 @@
 			<div class="wrap-login100">
 				<form method="POST" class="login100-form validate-form">
 					{% csrf_token %}
-            		{{form}}
 					<span class="login100-form-title p-b-26">
 						Login
 					</span>
@@ -31,18 +30,22 @@
 						<i class="zmdi zmdi-font"></i>
 					</span>
 
-					<div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
-						<input class="input100" type="text" name="email">
-						<span class="focus-input100" data-placeholder="Email"></span>
+					<div class="wrap-input100 validate-input">
+						{{form}}
+						<input class="input100" type="text" name="username">
+						<span class="focus-input100" data-placeholder="Username"></span>
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate="Enter password">
 						<span class="btn-show-pass">
 							<i class="zmdi zmdi-eye"></i>
 						</span>
-						<input class="input100" type="password" name="pass">
+						{{form}}
+						<input class="input100" type="password" name="password">
 						<span class="focus-input100" data-placeholder="Password"></span>
 					</div>
+
+					{{ error }}
 
 					<div class="container-login100-form-btn">
 						<div class="wrap-login100-form-btn">
