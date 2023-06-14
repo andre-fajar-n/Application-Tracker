@@ -1,32 +1,36 @@
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import User
-
-list_status = [
-    ('A', 'Applied'),
-    ('ST', 'Skill Test'),
-    ('IH', 'Interview HR'),
-    ('IU', 'Interview User'),
-    ('RR', 'Rejected Resume'),
-    ('RST', 'Rejected Skill Test'),
-    ('RH', 'Rejected HR'),
-    ('RU', 'Rejected User'),
-    ('TK', 'Tidak Kukerjakan'),
-    ('D', 'Dikeep'),
-    ('O', 'Offering'),
-]
+from django.db.models.constraints import UniqueConstraint
 
 # Create your models here.
+
+
+class Platform(models.Model):
+    name = models.CharField(max_length=50)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    UniqueConstraint(fields=['user_id', 'name'], name="unique_platform")
+
+
+class ApplicationStatus(models.Model):
+    name = models.CharField(max_length=50)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    UniqueConstraint(fields=['user_id', 'name'],
+                     name="unique_application_status")
 
 
 class Application(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     position = models.CharField(max_length=255)
     company = models.CharField(max_length=255)
-    platform = models.CharField(max_length=255)
+    platform = models.ForeignKey(Platform, on_delete=models.RESTRICT)
     source_link = models.CharField(max_length=255)
-    last_updated = models.TimeField()
-    last_status = models.CharField(max_length=50, choices=list_status)
-    created_at = models.DateTimeField()
+    last_updated = models.DateField()
+    last_status = models.ForeignKey(
+        ApplicationStatus, on_delete=models.RESTRICT)
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True, blank=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
 
@@ -35,10 +39,11 @@ class Application(models.Model):
 
 
 class ApplicationHistory(models.Model):
-    status = models.CharField(max_length=50, choices=list_status)
+    status = models.ForeignKey(ApplicationStatus, on_delete=models.RESTRICT)
     note = models.TextField()
-    application = models.ForeignKey(Application, on_delete=models.CASCADE)
-    created_at = models.DateTimeField()
+    application = models.ForeignKey(Application, on_delete=models.RESTRICT)
+    update_status_at = models.DateField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.status
