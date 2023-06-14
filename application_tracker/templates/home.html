@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+<title>Application Tracker</title>
+{% endblock %}
+
+{% block content %}
+    <a href="{% url 'application_tracker:logout'%}">Logout</a>    
+{% endblock %}
