@@ -30,8 +30,7 @@
 						<i class="zmdi zmdi-font"></i>
 					</span>
 
-					<div class="wrap-input100 validate-input">
-						{{form}}
+					<div class="wrap-input100 validate-input" data-validate="Enter username">
 						<input class="input100" type="text" name="username">
 						<span class="focus-input100" data-placeholder="Username"></span>
 					</div>
@@ -40,12 +39,15 @@
 						<span class="btn-show-pass">
 							<i class="zmdi zmdi-eye"></i>
 						</span>
-						{{form}}
 						<input class="input100" type="password" name="password">
 						<span class="focus-input100" data-placeholder="Password"></span>
 					</div>
 
-					{{ error }}
+					{% if messages %}
+						{% for message in messages %}
+						<div>{{message}}</div>
+						{% endfor %}
+					{% endif %}
 
 					<div class="container-login100-form-btn">
 						<div class="wrap-login100-form-btn">

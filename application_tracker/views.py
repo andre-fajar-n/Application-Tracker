@@ -1,15 +1,13 @@
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
-from .serializers import UserSerializer
-from .serializers import ApplicationSerializer
-from .serializers import ApplicationHistorySerializer
-from .models import User
-from .models import Application
-from .models import ApplicationHistory
+from .serializers import UserSerializer, ApplicationSerializer, ApplicationHistorySerializer
+from .models import User, Application, ApplicationHistory
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from . import forms
+from application_tracker.common.errors import getErrorMessageFromForm
+
 
 # Create your views here.
 
@@ -47,7 +45,8 @@ def LoginPage(request):
             login(request, user)
             return redirect('application_tracker:home')
         else:
-            context['error'] = "Username or password invalid"
+            messages.error(request, "Username or password invalid")
+            return HttpResponseRedirect("/login")
 
     return render(request, 'authentication/login.html', context)
 
@@ -59,18 +58,18 @@ def RegisterPage(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            messages.success(request, "Registration successful.")
             return redirect("application_tracker:home")
         else:
-            # messages.error(request, "error form")
-            context['registration_form'] = form
-    # else:
-    # form = forms.NewUserForm()
-    # context['registration_form'] = form
+            context['form'] = form
+            messages.error(request, getErrorMessageFromForm(form))
+
+            return HttpResponseRedirect("/register")
+
+    else:
+        form = forms.NewUserForm()
+        context['form'] = form
 
     return render(request, "authentication/register.html", context)
-    # return redirect("application_tracker:register", context)
-    # return HttpResponseRedirect(redirect_to="/register", )
 
 
 def Logout(request):
