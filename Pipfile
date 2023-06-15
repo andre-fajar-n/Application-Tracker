@@ -10,8 +10,13 @@ django-cors-headers = "*"
 python-dotenv = "*"
 psycopg2-binary = "*"
 gunicorn = "*"
+dj-database-url = "*"
+django-heroku = "*"
+python-decouple = "*"
+psycopg2 = "*"
+whitenoise = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.11"
+python_version = "3.11.4"
