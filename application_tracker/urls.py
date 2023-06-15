@@ -9,7 +9,7 @@ urlpatterns = [
     path('login', views.LoginPage, name="login"),
     path('register', views.RegisterPage, name="register"),
     path('logout', views.Logout, name="logout"),
-    path('home', views.Home, name='home'),
+    path('', views.Home, name='home'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
