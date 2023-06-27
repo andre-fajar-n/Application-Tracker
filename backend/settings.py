@@ -28,7 +28,8 @@ SECRET_KEY = 'django-insecure-gwr^&e*=k$ph1k!9)_-kti9mx+y@mhyk5zv2o@y-lbg17)85it
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG_MODE")
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.vercel.app', '.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost',
+                 '.vercel.app', '.herokuapp.com', '*']
 
 
 # Application definition
@@ -140,8 +141,8 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = '/static/'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
+MEDIA_URLS = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 django_heroku.settings(locals())
