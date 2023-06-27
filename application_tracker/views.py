@@ -43,7 +43,6 @@ def LoginPage(request):
         password = request.POST.get('password')
         user = authenticate(username=username, password=password)
 
-        print("CEK DISINI", user)
         if user is not None:
             login(request, user)
             return redirect('application_tracker:home')
