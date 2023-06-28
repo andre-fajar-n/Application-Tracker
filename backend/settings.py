@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-gwr^&e*=k$ph1k!9)_-kti9mx+y@mhyk5zv2o@y-lbg17)85it'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG_MODE")
+DEBUG = os.getenv("DEBUG_MODE").lower() in ('true', '1', 't')
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost',
                  '.vercel.app', '.herokuapp.com', '*']
