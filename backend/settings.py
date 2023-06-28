@@ -10,8 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-import dj_database_url
-import django_heroku
 from pathlib import Path
 import os
 
@@ -31,6 +29,9 @@ DEBUG = os.getenv("DEBUG_MODE")
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost',
                  '.vercel.app', '.herokuapp.com', '*']
 
+# FORM SUBMISSION
+# Comment out the following line and place your railway URL, and your production URL in the array.
+# CSRF_TRUSTED_ORIGINS = ["*"]
 
 # Application definition
 
@@ -55,12 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-]
-
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000'
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -134,15 +130,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
 MEDIA_URLS = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-django_heroku.settings(locals())

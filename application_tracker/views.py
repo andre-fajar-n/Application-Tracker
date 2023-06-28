@@ -1,6 +1,4 @@
 from django.shortcuts import render, redirect
-from rest_framework import viewsets
-from .serializers import UserSerializer, ApplicationSerializer, ApplicationHistorySerializer
 from .models import User, Application, ApplicationHistory
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -11,22 +9,6 @@ from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
-
-
-class UserView(viewsets.ModelViewSet):
-    serializer_class = UserSerializer
-    queryset = User.objects.all()
-
-
-class ApplicationView(viewsets.ModelViewSet):
-    serializer_class = ApplicationSerializer
-    queryset = Application.objects.all()
-
-
-class ApplicationHistoryView(viewsets.ModelViewSet):
-    serializer_class = ApplicationHistorySerializer
-    queryset = ApplicationHistory.objects.all()
-
 
 @login_required(login_url='application_tracker:login')
 def Home(request):
