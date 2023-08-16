@@ -1,0 +1,55 @@
+{% extends '../../base.html' %}
+
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+<title>Config Platform</title>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">Platforms</h6>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">No</th>
+                                <th scope="col">ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Created At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in pagination_data %}
+                            <tr>
+                                <th scope="row">{{pagination_data.start_index|add:forloop.counter0}}</th>
+                                <th>{{item.id}}</th>
+                                <td>{{item.name}}</td>
+                                <td>{{item.created_at}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- <form action="{% url 'application_tracker:platform' %}" method="get">
+                    <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" name="limit">
+                        <option value="5" selected>5</option>
+                        <option value="10">10</option>
+                        <option value="50">50</option>
+                    </select>
+                </form> -->
+
+
+                <!-- PAGINATION -->
+                {% include '../../component/pagination.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

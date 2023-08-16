@@ -1,0 +1,43 @@
+{% load static %}
+
+<div class="custom-pagination">
+    <div>
+        {% if pagination_data.has_previous %}
+        <a href="?limit={{request.GET.dict.limit}}&page=1">
+            {% endif %}
+            &laquo; first
+            {% if pagination_data.has_previous %}
+        </a>
+        {% endif %}
+        |
+        {% if pagination_data.has_previous %}
+        <a href="?limit={{request.GET.dict.limit}}&page={{ pagination_data.previous_page_number }}">
+            {% endif %}
+            previous
+            {% if pagination_data.has_previous %}
+        </a>
+        {% endif %}
+    </div>
+
+    <div>
+        Page {{ pagination_data.number }} of {{ pagination_data.paginator.num_pages }}
+    </div>
+
+    <div>
+        {% if pagination_data.has_next %}
+        <a href="?limit={{request.GET.dict.limit}}&page={{ pagination_data.next_page_number }}">
+            {% endif %}
+            next
+            {% if pagination_data.has_next %}
+        </a>
+        {% endif %}
+        |
+        {% if pagination_data.has_next %}
+        <a href="?limit={{request.GET.dict.limit}}&page={{ pagination_data.paginator.num_pages }}">
+            {% endif %}
+            last &raquo;
+            {% if pagination_data.has_next %}
+        </a>
+        {% endif %}
+    </div>
+</div>

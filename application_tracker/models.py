@@ -3,26 +3,28 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db.models.constraints import UniqueConstraint
 
-# Create your models here.
-
-
 class Platform(models.Model):
     name = models.CharField(max_length=50)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, unique=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    UniqueConstraint(fields=['user_id', 'name'], name="unique_platform")
 
+    class Meta:
+        constraints = [
+            UniqueConstraint(fields=['user_id', 'name'], name="unique_platform")
+        ]
 
 class ApplicationStatus(models.Model):
     name = models.CharField(max_length=50)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    UniqueConstraint(fields=['user_id', 'name'],
-                     name="unique_application_status")
 
+    class Meta:
+        constraints = [
+            UniqueConstraint(fields=['user_id', 'name'], name="unique_application_status")
+        ]
 
 class Application(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     position = models.CharField(max_length=255)
     company = models.CharField(max_length=255)
     platform = models.ForeignKey(Platform, on_delete=models.RESTRICT)
