@@ -9,7 +9,8 @@ urlpatterns = [
     path('register', authentication.RegisterPage, name="register"),
     path('logout', authentication.Logout, name="logout"),
     path('', dashboard.Home, name='home'),
-    path('config/platform', platform.GetAll, name="platform"),
+    path('config/platform', platform.get_all, name="list_platform"),
+    path('config/platform/new', platform.create, name="create_platform"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,

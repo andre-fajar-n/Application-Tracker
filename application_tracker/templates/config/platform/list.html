@@ -3,8 +3,14 @@
 {% load static %}
 {% load humanize %}
 
+
 {% block title %}
 <title>Config Platform</title>
+{% endblock %}
+
+{% block style %}
+<link href="{% static 'css/table.css' %}" rel="stylesheet">
+<link href="{% static 'css/pagination.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -12,7 +18,12 @@
     <div class="row g-4">
         <div class="col-12">
             <div class="bg-light rounded h-100 p-4">
-                <h6 class="mb-4">Platforms</h6>
+                <div class="title-table">
+                    <h3 class="m-2">Platforms</h3>
+                    <a href="{% url 'application_tracker:create_platform' %}">
+                        <button type="button" class="btn btn-primary m-2">Create</button>
+                    </a>
+                </div>
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
@@ -36,7 +47,7 @@
                     </table>
                 </div>
 
-                <!-- <form action="{% url 'application_tracker:platform' %}" method="get">
+                <!-- <form action="{% url 'application_tracker:list_platform' %}" method="get">
                     <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" name="limit">
                         <option value="5" selected>5</option>
                         <option value="10">10</option>

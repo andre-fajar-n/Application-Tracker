@@ -64,11 +64,6 @@
     border-radius: 50px;
 }
 
-.custom-pagination {
-    display: flex !important;
-    justify-content: space-between !important;
-}
-
 /*** Layout ***/
 .sidebar {
     position: fixed;
