@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from application_tracker.common.errors import getErrorMessageFromForm
 
 
-def LoginPage(request):
+def login(request):
     context = {}
     if request.user.is_authenticated:
         return redirect('application_tracker:home')
@@ -26,10 +26,10 @@ def LoginPage(request):
     return render(request, 'authentication/login.html', context)
 
 
-def RegisterPage(request):
+def register(request):
     context = {}
     if request.method == "POST":
-        form = forms.NewUserForm(request.POST)
+        form = forms.RegisterUserForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
@@ -41,12 +41,12 @@ def RegisterPage(request):
             return HttpResponseRedirect("/register")
 
     else:
-        form = forms.NewUserForm()
+        form = forms.RegisterUserForm()
         context['form'] = form
 
     return render(request, "authentication/register.html", context)
 
 
-def Logout(request):
+def logout_request(request):
     logout(request)
     return redirect("application_tracker:login")

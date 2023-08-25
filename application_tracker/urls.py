@@ -5,10 +5,10 @@ from application_tracker.views import authentication, dashboard, platform
 
 app_name = 'application_tracker'
 urlpatterns = [
-    path('login', authentication.LoginPage, name="login"),
-    path('register', authentication.RegisterPage, name="register"),
-    path('logout', authentication.Logout, name="logout"),
-    path('', dashboard.Home, name='home'),
+    path('login', authentication.login, name="login"),
+    path('register', authentication.register, name="register"),
+    path('logout', authentication.logout_request, name="logout"),
+    path('', dashboard.home, name='home'),
     path('config/platform', platform.get_all, name="list_platform"),
     path('config/platform/new', platform.create, name="create_platform"),
 ]
