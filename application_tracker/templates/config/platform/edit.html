@@ -4,7 +4,7 @@
 {% load humanize %}
 
 {% block title %}
-<title>Create Config Platform</title>
+<title>Edit Config Platform</title>
 {% endblock %}
 
 {% block content %}
@@ -12,13 +12,13 @@
     <div class="row g-4">
         <div class="col-12">
             <div class="bg-light rounded h-100 p-4">
-                <h3 class="mb-4">Create Platform</h3>
+                <h3 class="mb-4">Edit Platform</h3>
                 <form method="POST">
                     {% csrf_token %}
                     <div class="row mb-3">
                         <label for="inputName" class="col-sm-2 col-form-label">Name</label>
                         <div class="col-sm-10">
-                            <input type="name" class="form-control" id="inputName" name="name">
+                            <input type="name" class="form-control" id="inputName" name="name" value="{{data.name}}">
                         </div>
                     </div>
                     {% include '../../component/error_message.html' %}

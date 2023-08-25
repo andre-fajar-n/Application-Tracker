@@ -3,7 +3,6 @@
 {% load static %}
 {% load humanize %}
 
-
 {% block title %}
 <title>Config Platform</title>
 {% endblock %}
@@ -32,6 +31,7 @@
                                 <th scope="col">ID</th>
                                 <th scope="col">Name</th>
                                 <th scope="col">Created At</th>
+                                <th scope="col">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -41,6 +41,14 @@
                                 <th>{{item.id}}</th>
                                 <td>{{item.name}}</td>
                                 <td>{{item.created_at}}</td>
+                                <td>
+                                    <a href="{% url 'application_tracker:edit_platform' item.id %}" class="me-4">
+                                        <i class="fa fa-pencil-alt"></i>
+                                    </a>
+                                    <a href="{% url 'application_tracker:delete_platform' item.id %}">
+                                        <i class="fa fa-eraser"></i>
+                                    </a>
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>

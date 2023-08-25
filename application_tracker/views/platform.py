@@ -4,12 +4,14 @@ from application_tracker.forms import PlatformForm
 from application_tracker.common.errors import getErrorMessageFromForm
 
 from django.core.paginator import Paginator
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.db import DatabaseError
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.views import View
+from django.utils.decorators import method_decorator
 
 @login_required(login_url='application_tracker:login')
 def get_all(request):
@@ -33,6 +35,8 @@ def get_all(request):
 @login_required(login_url='application_tracker:login')
 def create(request):
     context = {}
+    template = "config/platform/create.html"
+    path = "/config/platform/new"
 
     if request.method == "POST":
         form = PlatformForm(request.POST)
@@ -46,16 +50,65 @@ def create(request):
                 if "unique_platform" in msg:
                     msg = "This name already exist"
                 messages.error(request, msg)
-                return HttpResponseRedirect("/config/platform/new")
+                return HttpResponseRedirect(path)
 
             except:
                 messages.error(request, "Error server")
-                return HttpResponseRedirect("/config/platform/new")
+                return HttpResponseRedirect(path)
 
             return HttpResponseRedirect("/config/platform")
         else:
             context['form'] = form
             messages.error(request, getErrorMessageFromForm(form))
-            return HttpResponseRedirect("/config/platform/new")
+            return HttpResponseRedirect(path)
 
-    return render(request, "config/platform/create.html", context)
+    return render(request, template, context)
+
+@method_decorator(login_required(login_url='application_tracker:login'), name='get')
+class Edit(View):
+    context = {}
+    template = "config/platform/edit.html"
+    
+    def insert_id_to_path(self, id):
+        return f"/config/platform/{id}/edit"
+    
+    def get_detail_data(self, id, user):
+        return Platform.objects.get(id=id, user=user)
+
+    def get(self, request, id):
+        try:
+            # data = Platform.objects.get(id=id, user=request.user)
+            data = self.get_detail_data(id, request.user)
+            self.context['data'] = data
+        except:
+            self.template = "data_not_found.html"
+        return render(request, self.template, self.context)
+
+    def post(self, request, id):
+        current_data = self.get_detail_data(id, request.user)
+        form = PlatformForm(request.POST, instance=current_data)
+        if form.is_valid():
+            try:
+                form.save()
+            except:
+                messages.error(request, "Error server")
+                return HttpResponseRedirect(self.insert_id_to_path(id))
+
+            return HttpResponseRedirect("/config/platform")
+
+        self.context['form'] = form
+        messages.error(request, getErrorMessageFromForm(form))
+        return HttpResponseRedirect(self.insert_id_to_path(id))
+
+@method_decorator(login_required(login_url='application_tracker:login'), name='get')
+class Delete(View):
+    context = {}
+    template = "config/platform/list.html"
+    platform = Platform
+
+    def get(self, request, id):
+        try:
+            self.platform.objects.filter(id=id, user=request.user).delete()
+        except:
+            messages.add_message(request, 1, f"Failed to delete platform with id {id}")
+        return redirect('application_tracker:list_platform')

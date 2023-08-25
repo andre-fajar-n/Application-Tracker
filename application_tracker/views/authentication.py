@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from application_tracker.common.errors import getErrorMessageFromForm
 
 
-def login(request):
+def login_request(request):
     context = {}
     if request.user.is_authenticated:
         return redirect('application_tracker:home')
