@@ -13,9 +13,17 @@ from django.http import HttpResponseRedirect
 from django.views import View
 from django.utils.decorators import method_decorator
 
+canceled_redirect_url_key = "canceled_redirect_url"
+create_url_key = "create_url"
+
+url_list = "/config/platform"
+create_url = "/config/platform/new"
+
 @login_required(login_url='application_tracker:login')
 def get_all(request):
-    context = {}
+    context = {
+        create_url_key:create_url
+    }
 
     pagination_request = GetPaginationRequest()
     
@@ -34,7 +42,9 @@ def get_all(request):
 
 @login_required(login_url='application_tracker:login')
 def create(request):
-    context = {}
+    context = {
+        canceled_redirect_url_key:url_list
+    }
     template = "config/platform/create.html"
     path = "/config/platform/new"
 
@@ -66,7 +76,9 @@ def create(request):
 
 @method_decorator(login_required(login_url='application_tracker:login'), name='get')
 class Edit(View):
-    context = {}
+    context = {
+        canceled_redirect_url_key:url_list
+    }
     template = "config/platform/edit.html"
     
     def insert_id_to_path(self, id):
@@ -77,7 +89,6 @@ class Edit(View):
 
     def get(self, request, id):
         try:
-            # data = Platform.objects.get(id=id, user=request.user)
             data = self.get_detail_data(id, request.user)
             self.context['data'] = data
         except:
