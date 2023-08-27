@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.views import View
+from django.utils.decorators import method_decorator
 
-@login_required(login_url='application_tracker:login')
-def home(request):
+@method_decorator(login_required(login_url='application_tracker:login'), name='get')
+class Home(View):
     context = {
         "is_dashboard":"active",
     }
-    return render(request, 'home.html',context)
+    def get(self, request):
+        return render(request, 'home.html', self.context)

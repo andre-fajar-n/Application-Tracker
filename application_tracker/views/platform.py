@@ -19,36 +19,41 @@ create_url_key = "create_url"
 url_list = "/config/platform"
 create_url = "/config/platform/new"
 
-@login_required(login_url='application_tracker:login')
-def get_all(request):
+@method_decorator(login_required(login_url='application_tracker:login'), name='get')
+class GetAll(View):
     context = {
         create_url_key:create_url
     }
+    template = "config/platform/list.html"
 
-    pagination_request = GetPaginationRequest()
-    
-    platform = Platform.objects.all().order_by("id")
-    platform = platform.filter(user=request.user.id)
-
-    paginator = Paginator(platform, pagination_request.get_per_page(request))
+    def get(self, request):
+        pagination_request = GetPaginationRequest()
         
-    data = paginator.get_page(pagination_request.get_page(request))
+        platform = Platform.objects.all().order_by("id")
+        platform = platform.filter(user=request.user.id)
 
-    context["pagination_data"] = data
-    context["is_platform"] = "active"
-    context["is_config"] = "active"
+        paginator = Paginator(platform, pagination_request.get_per_page(request))
+            
+        data = paginator.get_page(pagination_request.get_page(request))
 
-    return render(request, "config/platform/list.html", context)
+        self.context["pagination_data"] = data
+        self.context["is_platform"] = "active"
+        self.context["is_config"] = "active"
 
-@login_required(login_url='application_tracker:login')
-def create(request):
+        return render(request, self.template, self.context)
+
+@method_decorator(login_required(login_url='application_tracker:login'), name='get')
+class Create(View):
     context = {
         canceled_redirect_url_key:url_list
     }
     template = "config/platform/create.html"
     path = "/config/platform/new"
-
-    if request.method == "POST":
+    
+    def get(self, request):
+        return render(request, self.template, self.context)
+    
+    def post(self, request):
         form = PlatformForm(request.POST)
         if form.is_valid():
             post=form.save(commit=False)
@@ -60,19 +65,17 @@ def create(request):
                 if "unique_platform" in msg:
                     msg = "This name already exist"
                 messages.error(request, msg)
-                return HttpResponseRedirect(path)
+                return HttpResponseRedirect(self.path)
 
             except:
                 messages.error(request, "Error server")
-                return HttpResponseRedirect(path)
+                return HttpResponseRedirect(self.path)
 
             return HttpResponseRedirect("/config/platform")
         else:
-            context['form'] = form
+            self.context['form'] = form
             messages.error(request, getErrorMessageFromForm(form))
-            return HttpResponseRedirect(path)
-
-    return render(request, template, context)
+            return HttpResponseRedirect(self.path)
 
 @method_decorator(login_required(login_url='application_tracker:login'), name='get')
 class Edit(View):

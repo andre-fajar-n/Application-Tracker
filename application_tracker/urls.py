@@ -5,12 +5,12 @@ from application_tracker.views import authentication, dashboard, platform
 
 app_name = 'application_tracker'
 urlpatterns = [
-    path('login', authentication.login_request, name="login"),
-    path('register', authentication.register, name="register"),
-    path('logout', authentication.logout_request, name="logout"),
-    path('', dashboard.home, name='home'),
-    path('config/platform', platform.get_all, name="list_platform"),
-    path('config/platform/new', platform.create, name="create_platform"),
+    path('login', authentication.Login.as_view(), name="login"),
+    path('register', authentication.Register.as_view(), name="register"),
+    path('logout', authentication.Logout.as_view(), name="logout"),
+    path('', dashboard.Home.as_view(), name='home'),
+    path('config/platform', platform.GetAll.as_view(), name="list_platform"),
+    path('config/platform/new', platform.Create.as_view(), name="create_platform"),
     path('config/platform/<id>/edit', platform.Edit.as_view(), name="edit_platform"),
     path('config/platform/<id>/delete', platform.Delete.as_view(), name="delete_platform"),
 ]
