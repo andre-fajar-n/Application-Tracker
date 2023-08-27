@@ -1,0 +1,38 @@
+{% extends '../../component/list_table.html' %}
+
+{% block title %}
+<title>Config Platform</title>
+{% endblock %}
+
+{% block table_title %}
+<h3 class="m-2">Platforms</h3>
+{% endblock %}
+
+{% block table_header %}
+<tr>
+    <th scope="col">No</th>
+    <th scope="col">ID</th>
+    <th scope="col">Name</th>
+    <th scope="col">Created At</th>
+    <th scope="col">Actions</th>
+</tr>
+{% endblock %}
+
+{% block table_data %}
+    {% for item in pagination_data %}
+    <tr>
+        <th scope="row">{{pagination_data.start_index|add:forloop.counter0}}</th>
+        <th>{{item.id}}</th>
+        <td>{{item.name}}</td>
+        <td>{{item.created_at}}</td>
+        <td>
+            <a href="{% url 'application_tracker:edit_platform' item.id %}" class="me-4">
+                <i class="fa fa-pencil-alt"></i>
+            </a>
+            <a href="{% url 'application_tracker:delete_platform' item.id %}">
+                <i class="fa fa-eraser"></i>
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+{% endblock %}

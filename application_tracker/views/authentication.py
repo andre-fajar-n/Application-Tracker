@@ -1,26 +1,23 @@
+from application_tracker import forms
 from django.shortcuts import render, redirect
-from .models import User, Application, ApplicationHistory
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-from . import forms
 from application_tracker.common.errors import getErrorMessageFromForm
-from django.contrib.auth.decorators import login_required
+from django.views import View
 
-
-# Create your views here.
-
-@login_required(login_url='application_tracker:login')
-def Home(request):
-    return render(request, 'home.html')
-
-
-def LoginPage(request):
+class Login(View):
     context = {}
-    if request.user.is_authenticated:
-        return redirect('application_tracker:home')
-
-    if request.method == "POST":
+    def is_authenticated(self, request):
+        if request.user.is_authenticated:
+            return redirect('application_tracker:home')
+    
+    def get(self, request):
+        self.is_authenticated(request)
+        return render(request, 'authentication/login.html', self.context)
+    
+    def post(self, request):
+        self.is_authenticated(request)
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(username=username, password=password)
@@ -32,30 +29,27 @@ def LoginPage(request):
             messages.error(request, "Username or password invalid")
             return HttpResponseRedirect("/login")
 
-    return render(request, 'authentication/login.html', context)
-
-
-def RegisterPage(request):
+class Register(View):
     context = {}
-    if request.method == "POST":
-        form = forms.NewUserForm(request.POST)
+
+    def get(self, request):
+        form = forms.RegisterUserForm()
+        self.context['form'] = form
+        return render(request, "authentication/register.html", self.context)
+    
+    def post(self, request):
+        form = forms.RegisterUserForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
             return redirect("application_tracker:home")
         else:
-            context['form'] = form
+            self.context['form'] = form
             messages.error(request, getErrorMessageFromForm(form))
 
             return HttpResponseRedirect("/register")
 
-    else:
-        form = forms.NewUserForm()
-        context['form'] = form
-
-    return render(request, "authentication/register.html", context)
-
-
-def Logout(request):
-    logout(request)
-    return redirect("application_tracker:login")
+class Logout(View):
+    def get(self, request):
+        logout(request)
+        return redirect("application_tracker:login")

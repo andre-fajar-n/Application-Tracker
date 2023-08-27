@@ -1,0 +1,4 @@
+.custom-pagination {
+    display: flex !important;
+    justify-content: space-between !important;
+}
