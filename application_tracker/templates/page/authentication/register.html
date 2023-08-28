@@ -1,4 +1,4 @@
-{% extends '../base.html' %}
+{% extends '../../component/base.html' %}
 
 {% load static %}
 {% load humanize %}
@@ -45,7 +45,7 @@
 							<a href="">Forgot Password</a>
 						</div> -->
 
-						{% include '../component/error_message.html' %}
+						{% include '../../component/error_message.html' %}
 						
 						<button type="submit" class="btn btn-primary py-3 w-100 mb-4">Register</button>
 						<p class="text-center mb-0">Already have an Account? <a href="{% url 'application_tracker:login' %}">Login</a></p>

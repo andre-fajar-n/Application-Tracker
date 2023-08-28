@@ -9,4 +9,4 @@ class Home(View):
         "is_dashboard":"active",
     }
     def get(self, request):
-        return render(request, 'home.html', self.context)
+        return render(request, 'page/home.html', self.context)
