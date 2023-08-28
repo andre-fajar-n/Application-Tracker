@@ -12,6 +12,9 @@ class Platform(models.Model):
         constraints = [
             UniqueConstraint(fields=['user_id', 'name'], name="unique_platform")
         ]
+    
+    def __str__(self):
+        return self.name
 
 class ApplicationStatus(models.Model):
     name = models.CharField(max_length=50)
@@ -22,6 +25,9 @@ class ApplicationStatus(models.Model):
         constraints = [
             UniqueConstraint(fields=['user_id', 'name'], name="unique_application_status")
         ]
+    
+    def __str__(self):
+        return self.name
 
 class Application(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
