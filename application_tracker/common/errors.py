@@ -7,7 +7,7 @@ def getErrorMessageFromForm(errorStr):
     for key in errorJson:
         errorVal = errorJson[key]
         for _, v in enumerate(errorVal):
-            errorMsg = v['message']
+            errorMsg = f"({key}) {v['message']}"
             break
         break
     return errorMsg

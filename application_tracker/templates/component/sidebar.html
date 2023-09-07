@@ -22,7 +22,7 @@
             <a href="{% url 'application_tracker:home' %}" class="nav-item nav-link {{is_dashboard}}">
                 <i class="fa fa-tachometer-alt me-2"></i>Dashboard
             </a>
-            <a href="" class="nav-item nav-link">
+            <a href="{% url 'application_tracker:list_application' %}" class="nav-item nav-link {{is_application}}">
                 <i class="fa fa-th me-2"></i>Application
             </a>
             <div class="nav-item dropdown">

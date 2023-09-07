@@ -1,7 +1,7 @@
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from application_tracker.views import authentication, dashboard, platform, application_status
+from application_tracker.views import authentication, dashboard, platform, application_status, application
 
 app_name = 'application_tracker'
 
@@ -24,12 +24,21 @@ config_url = [
     path("/application-status", include(config_application_status_url)),
 ]
 
+application_url = [
+    path('', application.GetAll.as_view(), name="list_application"),
+    path('/new', application.Create.as_view(), name="create_application"),
+    path('/<id>/delete', application.Delete.as_view(), name="delete_application"),
+    path('/<id>/edit', application.Edit.as_view(), name="edit_application"),
+    path('/<id>', application.Detail.as_view(), name="detail_application"),
+]
+
 urlpatterns = [
     path('login', authentication.Login.as_view(), name="login"),
     path('register', authentication.Register.as_view(), name="register"),
     path('logout', authentication.Logout.as_view(), name="logout"),
     path('', dashboard.Home.as_view(), name='home'),
     path('config', include(config_url)),
+    path('application', include(application_url))
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
