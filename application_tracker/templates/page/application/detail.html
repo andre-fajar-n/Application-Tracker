@@ -1,0 +1,41 @@
+{% extends '../../component/detail.html' %}
+
+{% block title %}
+<title>Detail Application</title>
+{% endblock %}
+
+{% block title_detail_data %}
+<h3 class="mb-4">Detail Application</h3>
+<a href="{% url 'application_tracker:list_application' %}">
+    <button type="submit" class="btn btn-primary mb-4">Back</button>
+</a>
+{% endblock %}
+
+{% block detail_data %}
+    <div class="row mb-3">
+        <label for="inputPosition" class="col-sm-2 col-form-label">Position</label>
+        <div class="col-sm-10">
+            <input type="position" class="form-control" id="inputPosition" name="position" value="{{data.position}}" disabled>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputCompany" class="col-sm-2 col-form-label">Company</label>
+        <div class="col-sm-10">
+            <input type="company" class="form-control" id="inputCompany" name="company" value="{{data.company}}" disabled>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputPlatform" class="col-sm-2 col-form-label">Platform</label>
+        <div class="col-sm-10">
+            <select class="form-select" id="inputPlatform" aria-label="Floating label select example" name="platform" disabled>
+                <option value="{{data.platform}}" selected>{{data.platform}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputSourceLink" class="col-sm-2 col-form-label">Source Link</label>
+        <div class="col-sm-10">
+            <input type="source_link" class="form-control" id="inputSourceLink" name="source_link" value="{{data.source_link}}" disabled>
+        </div>
+    </div>
+{% endblock %}

@@ -14,7 +14,7 @@ class Login(View):
     
     def get(self, request):
         self.is_authenticated(request)
-        return render(request, 'authentication/login.html', self.context)
+        return render(request, 'page/authentication/login.html', self.context)
     
     def post(self, request):
         self.is_authenticated(request)
@@ -35,7 +35,7 @@ class Register(View):
     def get(self, request):
         form = forms.RegisterUserForm()
         self.context['form'] = form
-        return render(request, "authentication/register.html", self.context)
+        return render(request, "page/authentication/register.html", self.context)
     
     def post(self, request):
         form = forms.RegisterUserForm(request.POST)

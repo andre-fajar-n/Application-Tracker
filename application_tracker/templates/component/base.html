@@ -41,17 +41,17 @@
 
 <body>
     <div class="container-fluid position-relative bg-white d-flex p-0">
-        {% include 'component/spinner.html' %}
+        {% include './spinner.html' %}
 
         {% if user.is_authenticated %}
-        {% include 'component/before_content.html' %}
+        {% include './before_content.html' %}
         {% endif %}
 
         {% block content %}
         {% endblock %}
 
         {% if user.is_authenticated %}
-        {% include 'component/after_content.html' %}
+        {% include './after_content.html' %}
         {% endif %}
     </div>
 

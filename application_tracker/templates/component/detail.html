@@ -1,0 +1,23 @@
+{% extends './base.html' %}
+
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="bg-light rounded h-100 p-4">
+                <div style="display: flex; justify-content: space-between;">
+                    {% block title_detail_data %}
+                    {% endblock %}
+                </div>
+
+                {% block detail_data %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

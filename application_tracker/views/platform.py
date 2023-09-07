@@ -24,7 +24,7 @@ class GetAll(View):
     context = {
         create_url_key:create_url
     }
-    template = "config/platform/list.html"
+    template = "page/config/platform/list.html"
 
     def get(self, request):
         pagination_request = GetPaginationRequest()
@@ -47,7 +47,7 @@ class Create(View):
     context = {
         canceled_redirect_url_key:url_list
     }
-    template = "config/platform/create.html"
+    template = "page/config/platform/create.html"
     path = "/config/platform/new"
     
     def get(self, request):
@@ -82,7 +82,7 @@ class Edit(View):
     context = {
         canceled_redirect_url_key:url_list
     }
-    template = "config/platform/edit.html"
+    template = "page/config/platform/edit.html"
     
     def insert_id_to_path(self, id):
         return f"/config/platform/{id}/edit"
@@ -95,7 +95,7 @@ class Edit(View):
             data = self.get_detail_data(id, request.user)
             self.context['data'] = data
         except:
-            self.template = "data_not_found.html"
+            self.template = "page/data_not_found.html"
         return render(request, self.template, self.context)
 
     def post(self, request, id):
@@ -117,7 +117,7 @@ class Edit(View):
 @method_decorator(login_required(login_url='application_tracker:login'), name='get')
 class Delete(View):
     context = {}
-    template = "config/platform/list.html"
+    template = "page/config/platform/list.html"
     platform = Platform
 
     def get(self, request, id):

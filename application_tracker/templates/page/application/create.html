@@ -1,0 +1,64 @@
+{% extends '../../component/form.html' %}
+
+{% block title %}
+<title>Create Application</title>
+{% endblock %}
+
+{% block title_form_create %}
+<h3 class="mb-4">Create Application</h3>
+{% endblock %}
+
+{% block form_create %}
+    <div class="row mb-3">
+        <label for="inputPosition" class="col-sm-2 col-form-label">Position</label>
+        <div class="col-sm-10">
+            <input type="position" class="form-control" id="inputPosition" name="position">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputCompany" class="col-sm-2 col-form-label">Company</label>
+        <div class="col-sm-10">
+            <input type="company" class="form-control" id="inputCompany" name="company">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputPlatform" class="col-sm-2 col-form-label">Platform</label>
+        <div class="col-sm-10">
+            <select class="form-select" id="inputPlatform" aria-label="Floating label select example" name="platform">
+                <option selected></option>
+                {% for value in platform %}
+                <option value="{{value.id}}">{{value.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputSourceLink" class="col-sm-2 col-form-label">Source Link</label>
+        <div class="col-sm-10">
+            <input type="source_link" class="form-control" id="inputSourceLink" name="source_link">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputLastUpdated" class="col-sm-2 col-form-label">Updated At</label>
+        <div class="col-sm-10">
+            <input type="last_updated" class="form-control" id="inputLastUpdated" name="last_updated">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputLastStatus" class="col-sm-2 col-form-label">Status</label>
+        <div class="col-sm-10">
+            <select class="form-select" id="inputLastStatus" aria-label="Floating label select example" name="last_status">
+                <option selected></option>
+                {% for value in application_status %}
+                <option value="{{value.id}}">{{value.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNote" class="col-sm-2 col-form-label">Status Note</label>
+        <div class="col-sm-10">
+            <input type="note" class="form-control" id="inputNote" name="note">
+        </div>
+    </div>
+{% endblock %}
