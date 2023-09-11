@@ -1,0 +1,59 @@
+{% extends '../../component/form.html' %}
+
+{% block title %}
+<title>Add Progress Application</title>
+{% endblock %}
+
+{% block title_form_create %}
+<h3 class="mb-4">Add Progress Application</h3>
+{% endblock %}
+
+{% block form_create %}
+    <div class="row mb-3">
+        <label for="inputApplicationID" class="col-sm-2 col-form-label">Application ID</label>
+        <div class="col-sm-10">
+            <input type="applicationID" class="form-control" id="inputApplicationID" name="applicationID" value="{{application.id}}" disabled>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputPosition" class="col-sm-2 col-form-label">Position</label>
+        <div class="col-sm-10">
+            <input type="position" class="form-control" id="inputPosition" name="position" value="{{application.position}}" disabled>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputCompany" class="col-sm-2 col-form-label">Company</label>
+        <div class="col-sm-10">
+            <input type="company" class="form-control" id="inputCompany" name="company" value="{{application.company}}" disabled>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputPlatform" class="col-sm-2 col-form-label">Platform</label>
+        <div class="col-sm-10">
+            <input type="platform" class="form-control" id="inputPlatform" name="platform" value="{{application.platform}}" disabled>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputStatus" class="col-sm-2 col-form-label">Status</label>
+        <div class="col-sm-10">
+            <select class="form-select" id="inputStatus" aria-label="Floating label select example" name="status">
+                <option selected></option>
+                {% for value in application_status %}
+                <option value="{{value.id}}">{{value.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNote" class="col-sm-2 col-form-label">Note</label>
+        <div class="col-sm-10">
+            <input type="note" class="form-control" id="inputNote" name="note">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputUpdateStatusAt" class="col-sm-2 col-form-label">Update Status At</label>
+        <div class="col-sm-10">
+            <input type="update_status_at" class="form-control" id="inputUpdateStatusAt" name="update_status_at">
+        </div>
+    </div>
+{% endblock %}

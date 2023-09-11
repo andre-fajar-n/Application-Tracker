@@ -4,7 +4,7 @@ from application_tracker.forms import CreateApplicationForm, UpdateApplicationFo
 from application_tracker.common.errors import getErrorMessageFromForm
 
 from django.core.paginator import Paginator
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.db import DatabaseError, transaction
@@ -12,7 +12,6 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.views import View
 from django.utils.decorators import method_decorator
-from django.db.models import ProtectedError
 import datetime
 
 canceled_redirect_url_key = "canceled_redirect_url"
@@ -165,6 +164,9 @@ class Detail(View):
         try:
             data = self.get_detail_data(id, request.user)
             self.context['data'] = data
+
+            histories = ApplicationHistory.objects.filter(application_id=data.id).order_by("-update_status_at", "-created_at")
+            self.context['histories'] = histories
         except:
             self.template = "page/data_not_found.html"
         return render(request, self.template, self.context)

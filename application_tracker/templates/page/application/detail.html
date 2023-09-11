@@ -38,4 +38,41 @@
             <input type="source_link" class="form-control" id="inputSourceLink" name="source_link" value="{{data.source_link}}" disabled>
         </div>
     </div>
+
+    <div class="mt-5" style="display: flex; justify-content: space-between;">
+        <h3>Application Progress</h3>
+        <a href="{% url 'application_tracker:create_application_history' data.id %}">
+            <button type="submit" class="btn btn-primary mb-4">Add Progress</button>
+        </a>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Update Date</th>
+                    <th scope="col">Note</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for history in histories %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{history.id}}</td>
+                        <td>{{history.status}}</td>
+                        <td>{{history.update_status_at}}</td>
+                        <td>{{history.note}}</td>
+                        <td>
+                            <a href="{% url 'application_tracker:delete_application_history' data.id history.id %}">
+                                <i class="fa fa-eraser"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

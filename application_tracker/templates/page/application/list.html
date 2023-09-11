@@ -23,8 +23,8 @@
 {% block table_data %}
     {% for item in pagination_data %}
     <tr>
-        <th scope="row">{{pagination_data.start_index|add:forloop.counter0}}</th>
-        <th>{{item.id}}</th>
+        <td>{{pagination_data.start_index|add:forloop.counter0}}</td>
+        <td>{{item.id}}</td>
         <td>{{item.position}}</td>
         <td>{{item.company}}</td>
         <td>{{item.last_status}}</td>
