@@ -1,7 +1,7 @@
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from application_tracker.views import authentication, dashboard, platform, application_status, application
+from application_tracker.views import authentication, dashboard, platform, application_status, application, application_history
 
 app_name = 'application_tracker'
 
@@ -24,12 +24,18 @@ config_url = [
     path("/application-status", include(config_application_status_url)),
 ]
 
+application_history_url = [
+    path('/history/<id>', application_history.Delete.as_view(), name="delete_application_history"),
+    path('/history', application_history.Create.as_view(), name="create_application_history"),
+]
+
 application_url = [
     path('', application.GetAll.as_view(), name="list_application"),
     path('/new', application.Create.as_view(), name="create_application"),
     path('/<id>/delete', application.Delete.as_view(), name="delete_application"),
     path('/<id>/edit', application.Edit.as_view(), name="edit_application"),
     path('/<id>', application.Detail.as_view(), name="detail_application"),
+    path('/<application_id>', include(application_history_url)),
 ]
 
 urlpatterns = [
