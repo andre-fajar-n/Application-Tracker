@@ -19,13 +19,13 @@ class ApplicationStatusForm(ModelForm):
         fields = ('name', )
 
 class CreateApplicationForm(ModelForm):
-    source_link = URLField()
+    source_link = URLField(required=False)
     class Meta():
         model = Application
         fields = ('position', 'company', 'platform', 'source_link', 'last_updated', 'last_status')
 
 class UpdateApplicationForm(ModelForm):
-    source_link = URLField()
+    source_link = URLField(required=False)
     class Meta():
         model = Application
         fields = ('position', 'company', 'platform', 'source_link')
