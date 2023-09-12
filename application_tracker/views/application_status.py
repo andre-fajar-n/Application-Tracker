@@ -56,7 +56,7 @@ class Create(View):
     def post(self, request):
         form = ApplicationStatusForm(request.POST)
         if form.is_valid():
-            post=form.save(commit=False)
+            post = form.save(commit=False)
             post.user = request.user
             try:
                 post.save()

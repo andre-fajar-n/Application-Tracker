@@ -15,6 +15,10 @@ class Platform(models.Model):
     
     def __str__(self):
         return self.name
+    
+    def save(self, *args, **kwargs):
+        self.name = self.name.lower()
+        return super(Platform, self).save(*args, **kwargs)
 
 class ApplicationStatus(models.Model):
     name = models.CharField(max_length=50)
@@ -28,6 +32,10 @@ class ApplicationStatus(models.Model):
     
     def __str__(self):
         return self.name
+    
+    def save(self, *args, **kwargs):
+        self.name = self.name.lower()
+        return super(ApplicationStatus, self).save(*args, **kwargs)
 
 class Application(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
