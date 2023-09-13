@@ -76,6 +76,7 @@ class Create(View):
                     application_history = ApplicationHistory()
                     application_history.status = application.last_status
                     application_history.application = application
+                    application_history.update_status_at = application.last_updated
                     application_history.note = request.POST.get("note")
                     application_history.save()
             except DatabaseError as e:
