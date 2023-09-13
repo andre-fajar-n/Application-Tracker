@@ -25,7 +25,16 @@ class Delete(View):
 
     def get(self, request, application_id, id):
         try:
-            ApplicationHistory.objects.filter(application_id=application_id, id=id).delete()
+            with transaction.atomic():
+                ApplicationHistory.objects.filter(application_id=application_id, id=id).delete()
+
+                # get last history
+                history = ApplicationHistory.objects.filter(application_id=application_id).order_by("-update_status_at", "-created_at")[0]
+
+                application = Application.objects.get(id=application_id)
+                application.last_status = history.status
+                application.last_updated = history.update_status_at
+                application.save()
         except:
             messages.error(request, f"Failed to delete application with id {id}")
         return HttpResponseRedirect(self.path + f"/{application_id}")
