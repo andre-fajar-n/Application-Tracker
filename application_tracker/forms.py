@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from django.forms import ModelForm, URLField
+from django.forms import ModelForm, URLField, CharField
 from .models import Platform, ApplicationStatus, Application, ApplicationHistory
 
 class RegisterUserForm(UserCreationForm):
@@ -31,6 +31,7 @@ class UpdateApplicationForm(ModelForm):
         fields = ('position', 'company', 'platform', 'source_link')
 
 class CreateNewApplicationHistoryForm(ModelForm):
+    note = CharField(required=False)
     class Meta():
         model = ApplicationHistory
         fields = ('status', 'note', 'update_status_at')
