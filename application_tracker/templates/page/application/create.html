@@ -1,4 +1,5 @@
 {% extends '../../component/form.html' %}
+{% load static %}
 
 {% block title %}
 <title>Create Application</title>
@@ -41,7 +42,14 @@
     <div class="row mb-3">
         <label for="inputLastUpdated" class="col-sm-2 col-form-label">Updated At</label>
         <div class="col-sm-10">
-            <input type="last_updated" class="form-control" id="inputLastUpdated" name="last_updated">
+            <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+                {{ form.last_updated }}
+                <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                    <div class="input-group-text" style="display: block;">
+                        <i class="fa fa-calendar-alt"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="row mb-3">
@@ -61,4 +69,8 @@
             <input type="note" class="form-control" id="inputNote" name="note">
         </div>
     </div>
+{% endblock %}
+
+{% block additional_script %}
+<script src="{% static 'js/datepicker.js' %}"></script>
 {% endblock %}
