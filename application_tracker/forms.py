@@ -21,7 +21,7 @@ class ApplicationStatusForm(ModelForm):
 class CreateApplicationForm(ModelForm):
     source_link = URLField(required=False)
     last_updated = DateTimeField(
-        input_formats=['%d/%m/%Y'],
+        input_formats=['%d/%m/%Y','%d %B %Y','%d %b %Y'],
         widget=DateTimeInput(attrs={
             'class': 'form-control datetimepicker-input',
             'data-target': '#datetimepicker1'
@@ -40,7 +40,7 @@ class UpdateApplicationForm(ModelForm):
 class CreateNewApplicationHistoryForm(ModelForm):
     note = CharField(required=False)
     update_status_at = DateTimeField(
-        input_formats=['%d/%m/%Y'],
+        input_formats=['%d/%m/%Y','%d %B %Y','%d %b %Y'],
         widget=DateTimeInput(attrs={
             'class': 'form-control datetimepicker-input',
             'data-target': '#datetimepicker1'
