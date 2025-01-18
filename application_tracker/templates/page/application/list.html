@@ -1,4 +1,5 @@
 {% extends '../../component/list_table.html' %}
+{% load custom_filters %}
 
 {% block title %}
 <title>List Application</title>
@@ -11,12 +12,33 @@
 {% block table_header %}
 <tr>
     <th scope="col">No</th>
-    <th scope="col">ID</th>
-    <th scope="col">Position</th>
-    <th scope="col">Company</th>
-    <th scope="col">Platform</th>
-    <th scope="col">Last Status</th>
-    <th scope="col">Last Updated</th>
+    <th scope="col"><a href="?sort=id&direction={{ current_direction|toggle_sort_direction }}">
+        ID 
+        {% if current_sort == 'id' %}
+            <i class="fa {{ current_direction|show_arrow_order_by }}"></i>
+        {% endif %}
+    </a></th>
+    
+    <th scope="col"><a href="?sort=position&direction={{ current_direction|toggle_sort_direction }}">
+        Position
+        <i class="fa {{ current_direction|show_arrow_order_by }}"></i>
+    </a></th>
+    <th scope="col"><a href="?sort=company&direction={{ current_direction|toggle_sort_direction }}">
+        Company
+        <i class="fa {{ current_direction|show_arrow_order_by }}"></i>
+    </a></th>
+    <th scope="col"><a href="?sort=platform&direction={{ current_direction|toggle_sort_direction }}">
+        Platform
+        <i class="fa {{ current_direction|show_arrow_order_by }}"></i>
+    </a></th>
+    <th scope="col"><a href="?sort=last_status&direction={{ current_direction|toggle_sort_direction }}">
+        Last Status
+        <i class="fa {{ current_direction|show_arrow_order_by }}"></i>
+    </a></th>
+    <th scope="col"><a href="?sort=last_updated&direction={{ current_direction|toggle_sort_direction }}">
+        Last Updated
+        <i class="fa {{ current_direction|show_arrow_order_by }}"></i>
+    </a></th>
     <th scope="col">Actions</th>
 </tr>
 {% endblock %}

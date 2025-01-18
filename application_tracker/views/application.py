@@ -32,9 +32,23 @@ class GetAll(View):
 
     def get(self, request):
         pagination_request = GetPaginationRequest()
+
+        # Get sort field and direction from query parameters
+        sort_field = request.GET.get("sort", "")  # Default sorting field
+        sort_direction = request.GET.get("direction", "")  # Default sorting direction
+
+        # Validate direction and prepare ordering string
+        if sort_direction == "desc":
+            order_by = f"-{sort_field}"
+        else:
+            order_by = sort_field
         
-        application_status = Application.objects.all().order_by("id")
-        application_status = application_status.filter(user=request.user.id)
+        # Reset to default if no sorting parameters are provided
+        if not request.GET.get("sort") and not request.GET.get("direction"):
+            order_by = "-created_at"  # Default order by ID ascending
+        
+        application_status = Application.objects.all()
+        application_status = application_status.filter(user=request.user.id).order_by(order_by)
 
         paginator = Paginator(application_status, pagination_request.get_per_page(request))
             
@@ -42,6 +56,8 @@ class GetAll(View):
 
         self.context["pagination_data"] = data
         self.context["is_application"] = "active"
+        self.context["current_sort"] = sort_field
+        self.context["current_direction"] = sort_direction
 
         return render(request, self.template, self.context)
 

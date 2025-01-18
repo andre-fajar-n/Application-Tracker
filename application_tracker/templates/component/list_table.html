@@ -13,12 +13,19 @@
     <div class="row g-4">
         <div class="col-12">
             <div class="bg-light rounded h-100 p-4">
-                <div class="title-table">
+                <div class="title-table d-flex justify-content-between mb-2">
                     {% block table_title %}
                     {% endblock %}
-                    <a href="{{create_url}}">
-                        <button type="button" class="btn btn-primary m-2">Create</button>
-                    </a>
+                    <div>
+                        <a href="?">
+                            <button type="button" class="btn btn-secondary">
+                                <i class="fa fa-refresh"></i> Reset Order
+                            </button>
+                        </a>
+                        <a href="{{ create_url }}">
+                            <button type="button" class="btn btn-primary">Create</button>
+                        </a>
+                    </div>
                 </div>
                 {% include '../component/error_message.html' %}
                 <div class="table-responsive">
