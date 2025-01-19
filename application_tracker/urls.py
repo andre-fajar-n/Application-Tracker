@@ -2,6 +2,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from application_tracker.views import authentication, dashboard, platform, application_status, application, application_history
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 app_name = 'application_tracker'
 
@@ -46,6 +47,9 @@ urlpatterns = [
     path('config', include(config_url)),
     path('application', include(application_url))
 ]
+
+urlpatterns += staticfiles_urlpatterns()
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)

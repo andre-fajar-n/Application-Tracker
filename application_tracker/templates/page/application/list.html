@@ -21,23 +21,33 @@
     
     <th scope="col"><a href="?sort=position&direction={{ current_direction|toggle_sort_direction }}">
         Position
-        <i class="fa {{ current_direction|show_arrow_order_by }}"></i>
+        {% if current_sort == 'position' %}
+            <i class="fa {{ current_direction|show_arrow_order_by }}"></i>
+        {% endif %}
     </a></th>
     <th scope="col"><a href="?sort=company&direction={{ current_direction|toggle_sort_direction }}">
         Company
-        <i class="fa {{ current_direction|show_arrow_order_by }}"></i>
+        {% if current_sort == 'company' %}
+            <i class="fa {{ current_direction|show_arrow_order_by }}"></i>
+        {% endif %}
     </a></th>
     <th scope="col"><a href="?sort=platform&direction={{ current_direction|toggle_sort_direction }}">
         Platform
-        <i class="fa {{ current_direction|show_arrow_order_by }}"></i>
+        {% if current_sort == 'platform' %}
+            <i class="fa {{ current_direction|show_arrow_order_by }}"></i>
+        {% endif %}
     </a></th>
     <th scope="col"><a href="?sort=last_status&direction={{ current_direction|toggle_sort_direction }}">
         Last Status
-        <i class="fa {{ current_direction|show_arrow_order_by }}"></i>
+        {% if current_sort == 'last_status' %}
+            <i class="fa {{ current_direction|show_arrow_order_by }}"></i>
+        {% endif %}
     </a></th>
     <th scope="col"><a href="?sort=last_updated&direction={{ current_direction|toggle_sort_direction }}">
         Last Updated
-        <i class="fa {{ current_direction|show_arrow_order_by }}"></i>
+        {% if current_sort == 'last_updated' %}
+            <i class="fa {{ current_direction|show_arrow_order_by }}"></i>
+        {% endif %}
     </a></th>
     <th scope="col">Actions</th>
 </tr>

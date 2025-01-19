@@ -10,4 +10,7 @@ cleanup-migration-file:
 run:
 	python manage.py runserver
 
+run3:
+	python3 manage.py runserver
+
 migrate-and-run: migrate-up run
