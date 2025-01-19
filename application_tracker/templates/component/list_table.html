@@ -17,15 +17,17 @@
                     {% block table_title %}
                     {% endblock %}
                     <div>
-                        <a href="?">
-                            <button type="button" class="btn btn-secondary">
-                                <i class="fa fa-refresh"></i> Reset Order
-                            </button>
-                        </a>
                         <a href="{{ create_url }}">
                             <button type="button" class="btn btn-primary">Create</button>
                         </a>
                     </div>
+                </div>
+                <div>
+                    <a href="?">
+                        <button type="button" class="btn btn-secondary">
+                            <i class="fa fa-refresh"></i> Reset Order
+                        </button>
+                    </a>
                 </div>
                 {% include '../component/error_message.html' %}
                 <div class="table-responsive">
