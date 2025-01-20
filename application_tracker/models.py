@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db.models.constraints import UniqueConstraint
+from django.db.models.functions import Lower
 
 class Platform(models.Model):
     name = models.CharField(max_length=50)
@@ -10,14 +11,13 @@ class Platform(models.Model):
 
     class Meta:
         constraints = [
-            UniqueConstraint(fields=['user_id', 'name'], name="unique_platform")
+            UniqueConstraint('user_id', Lower('name'), name="unique_platform")
         ]
     
     def __str__(self):
         return self.name
     
     def save(self, *args, **kwargs):
-        self.name = self.name.lower()
         return super(Platform, self).save(*args, **kwargs)
 
 class ApplicationStatus(models.Model):
@@ -27,14 +27,13 @@ class ApplicationStatus(models.Model):
 
     class Meta:
         constraints = [
-            UniqueConstraint(fields=['user_id', 'name'], name="unique_application_status")
+            UniqueConstraint('user_id', Lower('name'), name="unique_application_status")
         ]
     
     def __str__(self):
         return self.name
     
     def save(self, *args, **kwargs):
-        self.name = self.name.lower()
         return super(ApplicationStatus, self).save(*args, **kwargs)
 
 class Application(models.Model):
@@ -44,8 +43,7 @@ class Application(models.Model):
     platform = models.ForeignKey(Platform, on_delete=models.RESTRICT)
     source_link = models.CharField(max_length=255)
     last_updated = models.DateField()
-    last_status = models.ForeignKey(
-        ApplicationStatus, on_delete=models.RESTRICT)
+    last_status = models.ForeignKey(ApplicationStatus, on_delete=models.RESTRICT)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True, blank=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
